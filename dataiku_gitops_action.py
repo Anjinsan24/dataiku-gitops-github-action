@@ -16,6 +16,7 @@ import urllib3
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 # Access environment variables
+BRANCH_NAME = os.getenv('BRANCH_NAME', 'main')
 DATAIKU_API_TOKEN_DEV = os.getenv('DATAIKU_API_TOKEN_DEV')
 DATAIKU_API_TOKEN_STAGING = os.getenv('DATAIKU_API_TOKEN_STAGING')
 DATAIKU_API_TOKEN_PROD = os.getenv('DATAIKU_API_TOKEN_PROD')
@@ -93,15 +94,15 @@ def sync_dataiku_to_git(client, project_key):
     project = client.get_project(project_key).get_project_git()
     return project.push()
 
-def get_git_sha():
+def get_git_sha(branch_name):
     """Get commits from origin/master."""
     # First fetch to ensure we have latest
-    subprocess.run(['git', 'fetch', 'origin', 'master'], capture_output=True)
+    subprocess.run(['git', 'fetch', 'origin', branch_name], capture_output=True)
     
     # Get the first commit from origin/master
-    result = subprocess.run(['git', 'log', 'origin/master', '-n', '1', '--pretty=format:%H'], capture_output=True, text=True)
+    result = subprocess.run(['git', 'log', f'origin/{branch_name}', '-n', '1', '--pretty=format:%H'], capture_output=True, text=True)
     if result.returncode != 0:
-        raise ValueError("Failed to get commit from origin/master")
+        raise ValueError("Failed to get commit from origin/{branch_name}")
     
     return result.stdout.strip()
 
