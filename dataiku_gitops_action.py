@@ -94,15 +94,15 @@ def sync_dataiku_to_git(client, project_key):
     project = client.get_project(project_key).get_project_git()
     return project.push()
 
-def get_git_sha(branch_name):
+def get_git_sha():
     """Get commits from origin/master."""
     # First fetch to ensure we have latest
-    subprocess.run(['git', 'fetch', 'origin', branch_name], capture_output=True)
+    subprocess.run(['git', 'fetch', 'origin', BRANCH_NAME], capture_output=True)
     
     # Get the first commit from origin/master
-    result = subprocess.run(['git', 'log', f'origin/{branch_name}', '-n', '1', '--pretty=format:%H'], capture_output=True, text=True)
+    result = subprocess.run(['git', 'log', f'origin/{BRANCH_NAME}', '-n', '1', '--pretty=format:%H'], capture_output=True, text=True)
     if result.returncode != 0:
-        raise ValueError("Failed to get commit from origin/{branch_name}")
+        raise ValueError("Failed to get commit from origin/{BRANCH_NAME}")
     
     return result.stdout.strip()
 
