@@ -57,6 +57,7 @@ runs:
 
     - name: Run Dataiku GitOps Action
       env:
+        BRANCH_NAME: ${{ inputs.branch_name }}
         DATAIKU_API_TOKEN_DEV: ${{ inputs.dataiku_api_token_dev }}
         DATAIKU_API_TOKEN_STAGING: ${{ inputs.dataiku_api_token_staging }}
         DATAIKU_API_TOKEN_PROD: ${{ inputs.dataiku_api_token_prod }}
